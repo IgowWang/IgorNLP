@@ -19,7 +19,7 @@ long_description = read('README.txt', 'CHANGES.txt')
 setup(
     name='IgorNLP',
     version='0.1',
-    url='',
+    url='https://github.com/IgowWang/IgorNLP',
     license='',
     author='igor',
     install_requires=['nltk','jieba'],
