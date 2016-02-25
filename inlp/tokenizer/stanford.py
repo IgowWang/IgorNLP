@@ -19,19 +19,35 @@ class StanfordChTokenizer(TokenizerI):
     '''
     Interface to Stanford Tokenizer
 
+    Stanford version:2015-12-09
+
+    segmenter_path = os.path.join(root, 'PATH-OF-StanfordSegmenter/stanford-segmenter/')
+    segmenter = StanfordChTokenizer(
+        path_to_jar=segmenter_path,
+        path_to_sihan_corpora_dict=os.path.join(segmenter_path, 'data'),
+        path_to_model=os.path.join(segmenter_path, 'data', 'pku.gz'),
+        path_to_dict=os.path.join(segmenter_path, 'data', 'dict-chris6.ser.gz')
+    )
+    string = "这是斯坦福中文分词器"
+    tokens = segmenter.tokenize(string)
+    print(tokens)
+
+    return:这 是 斯坦福 中文 分词器
+
+
     '''
-    _JAR = 'stanford-segmenter.jar'
 
     def __init__(self, path_to_jar=None, path_to_sihan_corpora_dict=None,
                  path_to_model=None, path_to_dict=None,
                  encoding='utf8', options=None,
                  verbose=False, java_options='-mx2g'):
-        self._stanford_jar = find_jar(
-            self._JAR, path_to_jar,
-            env_vars=('STANFORD_SEGMENTER',),
-            searchpath=(),
-            verbose=verbose
-        )
+        # self._stanford_jar = find_jar(
+        #     self._JAR, path_to_jar,
+        #     env_vars=('STANFORD_SEGMENTER'),
+        #     searchpath=(),
+        #     verbose=verbose
+        # )
+        self._stanford_jar = find_jars_within_path(path_to_jars=path_to_jar)
         self._sihan_corpora_dict = path_to_sihan_corpora_dict
         self._model = path_to_model
         self._dict = path_to_dict
@@ -74,7 +90,7 @@ class StanfordChTokenizer(TokenizerI):
         _input_fh = os.fdopen(_input_fh, 'wb')
         _input = '\n'.join(''.join(x) for x in strings)
         if isinstance(_input, compat.text_type) and encoding:
-            _input_fh = _input.encode(encoding)
+            _input = _input.encode(encoding)
         _input_fh.write(_input)
         _input_fh.close()
 
@@ -93,6 +109,8 @@ class StanfordChTokenizer(TokenizerI):
         # Delete the temporary file
         os.unlink(self._input_file_path)
 
+        return stdout
+
     def _execute(self, cmd, verbose=False):
         encoding = self._encoding
         cmd.extend(['-inputEncoding', encoding])
@@ -104,6 +122,7 @@ class StanfordChTokenizer(TokenizerI):
 
         # Configure java
         config_java(options=self._java_options, verbose=verbose)
+        print(self._stanford_jar)
         stdout, _stderr = java(cmd, classpath=self._stanford_jar, stdout=PIPE, stderr=PIPE)
         stdout = stdout.decode(encoding)
 
@@ -111,3 +130,21 @@ class StanfordChTokenizer(TokenizerI):
         config_java(options=default_options, verbose=False)
 
         return stdout
+
+
+if __name__ == '__main__':
+    from inlp import root
+
+    # Unit test
+    # You have to set the right "Data" path that have stanford-segmenter root
+    segmenter_path = os.path.join(root, 'Data/stanford-segmenter/')
+    segmenter = StanfordChTokenizer(
+        path_to_jar=segmenter_path,
+        path_to_sihan_corpora_dict=os.path.join(segmenter_path, 'data'),
+        path_to_model=os.path.join(segmenter_path, 'data', 'pku.gz'),
+        path_to_dict=os.path.join(segmenter_path, 'data', 'dict-chris6.ser.gz')
+
+    )
+    string = "这是斯坦福中文分词器"
+    tokens = segmenter.tokenize(string)
+    print(tokens)
