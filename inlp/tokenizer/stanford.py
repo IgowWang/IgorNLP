@@ -79,7 +79,7 @@ class StanfordChTokenizer(TokenizerI):
         return stdout
 
     def tokenize(self, s):
-        return self.tokenize_sents([s])
+        return self.tokenize_sents([s])[0]
 
     def tokenize_sents(self, strings):
         encoding = self._encoding
@@ -109,7 +109,7 @@ class StanfordChTokenizer(TokenizerI):
         # Delete the temporary file
         os.unlink(self._input_file_path)
 
-        return stdout
+        return [s.split() for s in stdout.split('\n')][:-1]
 
     def _execute(self, cmd, verbose=False):
         encoding = self._encoding
@@ -147,4 +147,7 @@ if __name__ == '__main__':
     )
     string = "这是斯坦福中文分词器"
     tokens = segmenter.tokenize(string)
+    print(tokens)
+    strings = ["这是斯坦福中文分词器", "斯坦福分词器接口调用"]
+    tokens = segmenter.tokenize_sents(strings)
     print(tokens)

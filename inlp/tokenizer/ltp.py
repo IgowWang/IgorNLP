@@ -72,7 +72,7 @@ class LtpTokenizer(TokenizerI):
         return stdout
 
     def tokenize(self, s):
-        return self.tokenize_sents([s])
+        return self.tokenize_sents([s])[0]
 
     def tokenize_sents(self, strings):
         encoding = self._encoding
@@ -90,7 +90,7 @@ class LtpTokenizer(TokenizerI):
 
         stdout = self.segment_file(self._input_file_path)
 
-        return stdout
+        return [s.split() for s in stdout.split('\n')][:-1]
 
     def _execute(self, cmd):
         encoding = self._encoding
