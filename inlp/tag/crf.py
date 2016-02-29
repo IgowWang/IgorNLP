@@ -4,7 +4,6 @@
 # Author: Igor
 
 import re
-import pickle
 
 from inlp.tag.api import TaggerI
 
@@ -17,6 +16,19 @@ except ImportError:
 class CRFTagger(TaggerI):
     '''
     A module for tagging using CRFSuite
+
+    ##  test
+    from nltk.corpus import brown
+
+    train = brown.tagged_sents()[0:300]
+    tagger = CRFTagger(verbose=True)
+    tagger.train(train_data=train, model_file='../test/model')
+
+    test = brown.sents()[0]
+    print(test)
+    print(tagger.tag(test))
+
+    print(tagger.tag_sents(brown.sents()[1:5]))
     '''
 
     def __init__(self, feature_func=None, verbose=False, training_opt={}):
@@ -123,7 +135,7 @@ class CRFTagger(TaggerI):
     def tag(self, tokens):
         return self.tag_sents([tokens])[0]
 
-    def train(self, train_data, model_file, save=None):
+    def train(self, train_data, model_file):
         '''
         Train the CRF tagger using CRFSuite
         :param train_data: is the list of annotated sentences.
@@ -141,3 +153,18 @@ class CRFTagger(TaggerI):
 
         trainer.train(model_file)
         self.set_model_file(model_file)
+
+
+if __name__ == '__main__':
+    ## unit test
+    from nltk.corpus import brown
+
+    train = brown.tagged_sents()[0:300]
+    tagger = CRFTagger(verbose=True)
+    tagger.train(train_data=train, model_file='../test/model')
+
+    test = brown.sents()[0]
+    print(test)
+    print(tagger.tag(test))
+
+    print(tagger.tag_sents(brown.sents()[1:5]))
