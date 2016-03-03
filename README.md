@@ -50,4 +50,21 @@ print(test)
 print(tagger.tag(test))
 print(tagger.tag_sents(brown.sents()[1:5]))
 ```
+
+## parser
+- ltp依存句法分析,注意输入结果,还没有兼容nltk的树形输出结构
+```Python
+sents = [[('这', 'r'), ('是', 'v'), ('哈工大', 'j'), ('分词器', 'n'), ('。', 'wp')],
+             [('哈工大', 'j'), ('的', 'u'), ('分词器', 'n'), ('测试', 'v')]]
+path_ltp = '/home/igor/PycharmProjects/ltp'
+ltpPS = ltpParser(path_ltp)
+result = ltpPS.parse_sents(sents)
+print(result)
+>>>
+这	r	2	SBV
+是	v	0	HED
+哈工大	j	4	ATT
+分词器	n	2	VOB
+。	wp	2	WP
+```
     
