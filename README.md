@@ -4,6 +4,11 @@ natural language processing algorithms library and tools
 ## dependences
 - nltk
 
+
+## install
+- 源码安装 python setup.py install
+- 仅支持python3,测试只在linux平台下
+
 ## tokenizer
 - 支持斯坦福中文分词器(2015-12-09),需要配置java环境和斯坦福分词路径,接口与nltk一致
 ```Python
@@ -61,10 +66,6 @@ ltpPS = ltpParser(path_ltp)
 result = ltpPS.parse_sents(sents)
 print(result)
 >>>
-这	r	2	SBV
-是	v	0	HED
-哈工大	j	4	ATT
-分词器	n	2	VOB
-。	wp	2	WP
+[('这', 'r', '2', 'SBV'), ('是', 'v', '0', 'HED'), ('哈工大', 'j', '4', 'ATT'), ('分词器', 'n', '2', 'VOB'), ('。', 'wp', '2', 'WP')]
 ```
     

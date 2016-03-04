@@ -1,8 +1,10 @@
 __author__ = 'igor'
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 import io
+
 here = os.path.abspath(os.path.dirname(__file__))
+
 
 def read(*filenames, **kwargs):
     encoding = kwargs.get('encoding', 'utf-8')
@@ -13,18 +15,19 @@ def read(*filenames, **kwargs):
             buf.append(f.read())
     return seq.join(buf)
 
+
 # 长描述
-long_description = read('README.txt', 'CHANGES.txt')
+long_description = read('README.md')
 
 setup(
     name='IgorNLP',
     version='0.1',
     url='https://github.com/IgowWang/IgorNLP',
-    license='',
+    packages=find_packages(),
+    license='Apache License',
     author='igor',
-    install_requires=['nltk','jieba'],
+    install_requires=['nltk', 'jieba'],
     author_email='125942418@qq.com',
     description='natural language processing algorithms library and tools',
     long_description=long_description,
 )
-

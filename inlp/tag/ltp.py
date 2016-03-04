@@ -95,7 +95,8 @@ class LtpPosTagger(TaggerI):
 
         stdout = self.tag_file(self._input_file_path)
 
-        return [[tuple(token.split('_')) for token in sent.split('\t')] for sent in stdout.split('\n')[:-1]]
+        return [[tuple(token.split('_')) for token in sent.split('\t')]
+                for sent in stdout.strip().split('\n')]
 
     def _execute(self, cmd):
         encoding = self._encoding

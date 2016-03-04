@@ -13,7 +13,7 @@ from inlp.parse.api import ParserI
 from inlp.utils import ltp_cmd
 
 
-class ltpParser(ParserI):
+class LtpParser(ParserI):
     '''
     ltp依存句法分析
 
@@ -75,8 +75,8 @@ class ltpParser(ParserI):
         :param tokens:list
         :return:list(tuple(str,str))
         '''
-        if overridden(self.parse_sents()):
-            return self.parse_sents([sent])
+        if overridden(self.parse_sents):
+            return self.parse_sents([sent])[0]
         else:
             raise NotImplementedError()
 
@@ -98,6 +98,7 @@ class ltpParser(ParserI):
         _input_fh = os.fdopen(_input_fh, 'wb')
 
         _input = '\n'.join(['\t'.join(['_'.join(token) for token in sent]) for sent in sentences])
+        # print(_input)
         if isinstance(_input, compat.text_type) and encoding:
             _input = _input.encode(encoding)
         _input_fh.write(_input)
@@ -105,7 +106,7 @@ class ltpParser(ParserI):
 
         stdout = self.parse_file(self._input_file_path)
 
-        return stdout
+        return [[tuple(token.split()) for token in sent.split('\n')] for sent in stdout.strip().split('\n\n')]
 
     def _execute(self, cmd):
         encoding = self._encoding
@@ -116,13 +117,15 @@ class ltpParser(ParserI):
 
 
 if __name__ == '__main__':
-    sents = [[('这', 'r'), ('是', 'v'), ('哈工大', 'j'), ('分词器', 'n'), ('。', 'wp')],
+    sents = [[('这', 'r'), ('是', 'v'), ('哈工大', 'j'), ('分词器', 'n')],
              [('哈工大', 'j'), ('的', 'u'), ('分词器', 'n'), ('测试', 'v')]]
     #
     # string = '\n'.join(['\t'.join([ '_'.join(token) for token in sent]) for sent in sents])
     # print(string)
     path_ltp = '/home/igor/PycharmProjects/ltp'
-    ltpPS = ltpParser(path_ltp)
+    ltpPS = LtpParser(path_ltp)
     result = ltpPS.parse_sents(sents)
+    print(result)
+    result = ltpPS.parse(sents[0])
     print(result)
     pass

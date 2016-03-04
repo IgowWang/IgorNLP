@@ -91,12 +91,13 @@ class LtpTokenizer(TokenizerI):
 
         stdout = self.segment_file(self._input_file_path)
 
-        return [s.split() for s in stdout.split('\n')][:-1]
+        return [s.split() for s in stdout.strip().split('\n')]
 
     def _execute(self, cmd):
         encoding = self._encoding
         stdout, _stderr = ltp_cmd(cmd, stdout=PIPE, stderr=PIPE)
         stdout = stdout.decode(encoding)
+
 
         return stdout
 
